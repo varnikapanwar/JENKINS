@@ -36,7 +36,7 @@ pipeline {
             steps {
                 echo 'Running extra check: verifying greet() output...'
                 dir('Q7') {
-                    bat 'python -c check.py'
+                    bat 'python check.py'
                 }
             }
         }
