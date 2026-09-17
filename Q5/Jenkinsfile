@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/varnikapanwar/JENKINS.git'
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                dir('Q5') {
+                    bat 'python app.py'
+                }
+            }
+        }
+
+        stage('Archive Report') {
+            steps {
+                dir('Q5') {
+                    archiveArtifacts artifacts: 'report.txt',
+                                     fingerprint: true
+                }
+            }
+        }
+    }
+}
