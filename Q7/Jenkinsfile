@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(
+            name: 'RUN_EXTRA_CHECK',
+            defaultValue: true,
+            description: 'Run the extra check stage'
+        )
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/varnikapanwar/JENKINS.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('Q7') {
+                    bat 'python -m py_compile app.py'
+                }
+                echo 'Build successful.'
+            }
+        }
+
+        stage('Extra Check') {
+            when {
+                expression {
+                    params.RUN_EXTRA_CHECK == true
+                }
+            }
+            steps {
+                echo 'Running extra check: verifying greet() output...'
+                dir('Q7') {
+                    bat 'python -c "from app import greet; print(greet(\"Student\"))"'
+                }
+            }
+        }
+    }
+}
